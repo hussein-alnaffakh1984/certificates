@@ -76,6 +76,7 @@ ul.list li .nm{min-width:0;overflow-wrap:anywhere}
         <div class="row" id="deptTabs" role="group" aria-label="القسم" hidden>
           <button type="button" class="chip dtab" data-d="lab" aria-pressed="true">المختبرات</button>
           <button type="button" class="chip dtab" data-d="anes" aria-pressed="false">التخدير</button>
+          <button type="button" class="chip dtab" data-d="rad" aria-pressed="false">الأشعة</button>
         </div>
         <div class="stats">
           <span class="stat">الكل <b id="sAll">0</b></span>
@@ -157,7 +158,11 @@ const DEPTS = {
   lab:  { label: "المختبرات", ar: "قسم تقنيات المختبرات الطبية", en: "Department of Medical Laboratory Techniques",
           headAr: "م.د. قاسم محسن الفحام", headEn: "Dr. Qasim Mohsin Al-Fahham" },
   anes: { label: "التخدير", ar: "قسم تقنيات التخدير", en: "Department of Anesthesia Techniques",
-          headAr: "أ.د. إسراء عبد الأمير فليح", roleAr: "رئيسة القسم", headEn: "Prof. Dr. Israa Abdul-Ameer Fulaih" }
+          headAr: "أ.د. إسراء عبد الأمير فليح", roleAr: "رئيسة القسم", headEn: "Prof. Dr. Israa Abdul-Ameer Fulaih" },
+  rad:  { label: "الأشعة", ar: "قسم تقنيات الأشعة", en: "Department of Radiology Techniques",
+          headAr: "أ.د. عارف صالح بارون", headEn: "Prof. Dr. Arif Salih Baroon",
+          creditAr: "تصميم: د. محمد مالك عبود و د. حسين علي حسين النفاخ",
+          creditEn: "Designed by Dr. Mohammed Malik Abood & Dr. Hussein Ali Hussein Al-Naffakh" }
 };
 // {dean: "data:image/png…", lab: …} -> same keys with loaded images
 function loadSigs(map){
@@ -284,6 +289,16 @@ function drawCert(canvas, name, opts = {}){
       T(n, cx, mm(181.5), font(700, 16, AM), C.ink, "rtl"); T(role, cx, mm(188.8), font(700, 15, AM), C.burg, "rtl"); };
     sig(mm(84), "أ.د. فاضل إسماعيل شراد", "عميد الكلية");
     sig(mm(213), D.headAr, D.roleAr || "رئيس القسم");
+  }
+  // small designer credit at the bottom edge (only departments that have one)
+  const credit = opts.lang === "en" ? D.creditEn : D.creditAr;
+  if (credit){
+    ctx.save();
+    ctx.fillStyle = "rgba(90,80,88,.85)"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+    ctx.direction = opts.lang === "en" ? "ltr" : "rtl";
+    ctx.font = opts.lang === "en" ? `italic 500 ${mm(3.1)}px "Cormorant Garamond", serif` : `400 ${mm(3.3)}px "Amiri", serif`;
+    ctx.fillText(credit, mm(148.5), mm(196.2));
+    ctx.restore();
   }
   // electronic signatures: drawn just above each signature line
   if (opts.sigs){
